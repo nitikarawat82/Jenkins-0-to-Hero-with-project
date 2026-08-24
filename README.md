@@ -1,7 +1,45 @@
-# 🚀 Jenkins Setup on Ubuntu EC2
+# 🚀 Jenkins with Docker Agents on AWS EC2
 
-This project demonstrates how to install and configure **Jenkins on an Ubuntu EC2 instance** and access the Jenkins dashboard through port `8080`.
+## 📌 Project Overview
 
+This project demonstrates how to set up **Jenkins on an AWS EC2 instance** and use **Docker containers as Jenkins Agent nodes** for executing CI/CD jobs.
+
+Instead of creating multiple EC2 instances as Jenkins worker nodes, Docker containers are used as temporary and isolated Jenkins agents. This approach helps reduce infrastructure requirements and makes it easier to create and manage build environments.
+
+💡 Why Docker Agents?
+
+In a traditional Jenkins setup, multiple worker nodes can be created using separate EC2 instances.
+
+For example:
+
+```text
+Jenkins Controller
+       |
+       +---- EC2 Worker 1
+       |
+       +---- EC2 Worker 2
+       |
+       +---- EC2 Worker 3
+```
+However, creating a separate EC2 instance for every worker can increase infrastructure and maintenance overhead.
+
+Instead, Docker containers can be used as Jenkins agents:
+
+```text
+Jenkins Controller
+       |
+       v
+     Docker
+       |
+       +---- 🐳 Jenkins Agent
+       |
+       +---- 🐳 Jenkins Agent
+       |
+       +---- 🐳 Jenkins Agent
+```
+Docker containers are lightweight, isolated, and can be created when required. One of the major advantages of using Docker as a Jenkins Agent is that the agents can be **created and removed dynamically based on the workload**.
+
+In a traditional Jenkins architecture, if separate EC2 instances are used as worker nodes, the worker instances may remain running even when there are no jobs to execute.
 
 📌 Steps
 ## 1️⃣ Create Ubuntu EC2 Instance
