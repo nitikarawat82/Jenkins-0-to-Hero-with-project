@@ -4,7 +4,7 @@ This project demonstrates how to install and configure **Jenkins on an Ubuntu EC
 
 
 📌 Steps
-1️⃣ Create Ubuntu EC2 Instance
+## 1️⃣ Create Ubuntu EC2 Instance
 
 Create a simple Ubuntu EC2 instance on AWS.
 
@@ -17,7 +17,7 @@ ssh -i <key.pem> ubuntu@<EC2-PUBLIC-IP>
 
 ```
 
-2️⃣ Install Java ☕
+## 2️⃣ Install Java ☕
 
 Jenkins is a Java-based application, so Java needs to be installed before installing Jenkins.
 
@@ -36,7 +36,7 @@ Install OpenJDK 17, which is required to run Jenkins.
 ```text
 sudo apt install openjdk-21-jre
 ```
-Verify Java Installation
+## Verify Java Installation
 
 Check whether Java has been installed successfully.
 ```text
@@ -57,7 +57,7 @@ sudo apt-get update
 sudo apt-get install jenkins
 ```
 
-Check Jenkins Port 🔌
+## Check Jenkins Port 🔌
 <img width="1095" height="102" alt="image" src="https://github.com/user-attachments/assets/0f9c4fd8-8ba4-4d07-95dc-a11e6943abc1" />
 
 By default, Jenkins runs on port 8080.
@@ -72,8 +72,6 @@ Jenkins uses port 8080 by default for its web interface. Therefore, browser requ
 3. Security groups
 4. Add inbound traffic rules as shown in the image (you can just allow TCP 8080 as well, in my case, I allowed All traffic).
 
-5. 
-
 <img width="1892" height="591" alt="image" src="https://github.com/user-attachments/assets/9c6b3b8a-c936-44de-92f6-884be58efdb8" />
 
 💡 Why is this required?
@@ -82,7 +80,7 @@ AWS Security Groups act as a virtual firewall for EC2 instances.
 
 Allowing port 8080 enables traffic from the browser to reach the Jenkins service running on the EC2 instance.
 
-7️⃣ Access Jenkins 🌐
+## 7️⃣ Access Jenkins 🌐
 
 After allowing port 8080 in the Security Group, open Jenkins in a web browser.
 
@@ -95,7 +93,7 @@ http://<EC2-PUBLIC-IP>:8080
 
 <img width="1462" height="897" alt="image" src="https://github.com/user-attachments/assets/5412e7a6-e73e-4d5f-9278-37fa90825ead" />
 
-8️⃣ Get Initial Jenkins Admin Password 🔐
+## 8️⃣ Get Initial Jenkins Admin Password 🔐
 
 When Jenkins is installed for the first time, it generates an initial administrator password.
 
@@ -115,11 +113,40 @@ Jenkins uses this temporary password to securely unlock the Jenkins dashboard du
 
 <img width="1276" height="830" alt="image" src="https://github.com/user-attachments/assets/07393301-5223-40a6-ba67-2ff4a1927c64" />
 
-Click on Install suggested plugins
+## 9️⃣ Complete Jenkins Setup ⚙️
+
+Click on Install suggested plugins. Jenkins will install the commonly used plugins required for a basic Jenkins setup.
 
 <img width="1247" height="875" alt="image" src="https://github.com/user-attachments/assets/e0216ba3-c3c6-4247-b94c-b4a7bb5d3947" />
 
 Wait for the Jenkins to Install suggested plugins
+
+## Create Admin User
+
+Create the first Jenkins administrator account by providing:
+
+Username
+Password
+Full Name
+Email Address
+
+<img width="1321" height="868" alt="image" src="https://github.com/user-attachments/assets/63851572-4de6-4dc3-ba6f-c0b8565a0a93" />
+
+✅ Complete Setup
+
+After creating the admin user, complete the setup process. Once the setup is completed, the Jenkins Dashboard will be available.
+
+Jenkins is now successfully installed and configured on an Ubuntu EC2 instance. Jenkins can now be accessed using:
+
+```text
+http://35.174.115.40:8080/
+```
+<img width="730" height="452" alt="image" src="https://github.com/user-attachments/assets/7e07661b-8159-4cd8-913a-74166e89ffcd" />
+
+Jenkins Installation is Successful. You can now starting using the Jenkins
+
+<img width="1827" height="796" alt="image" src="https://github.com/user-attachments/assets/22579eb5-ea82-4c03-9ba1-42227f6f5f31" />
+
 
 
 
