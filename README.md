@@ -186,9 +186,78 @@ Jenkins Installation is Successful. You can now starting using the Jenkins
 <img width="1827" height="796" alt="image" src="https://github.com/user-attachments/assets/22579eb5-ea82-4c03-9ba1-42227f6f5f31" />
 
 
+## Install the Docker Pipeline plugin in Jenkins:
 
+1. Install the Docker Pipeline plugin in Jenkins:
 
+```text
+ sudo apt install docker.io -y
+```
 
+<img width="997" height="502" alt="image" src="https://github.com/user-attachments/assets/ed4b583b-cc12-4ab4-b2aa-17a94734b415" />
+
+Step 8 — Give Jenkins Permission to Use Docker
+
+```text
+ sudo su -
+
+usermod -aG docker jenkins
+usermod -aG docker ubuntu
+
+systemctl restart jenkins
+root@ip-172-31-86-175:~#
+```
+
+<img width="646" height="165" alt="image" src="https://github.com/user-attachments/assets/46aefdce-ab1e-4d49-8ffa-a0b78b209fc2" />
+
+Now jenkin user is able to create cintainer or run coantuner
+
+<img width="933" height="528" alt="image" src="https://github.com/user-attachments/assets/55442fc0-08ee-49fd-b74d-8173d292c3d7" />
+
+sometime jenkins dont pickup ur changes  so uc can reatrt ur jenkins. there might be a chahce its a good praactcie 
+
+Once you are done with the above steps, it is better to restart Jenkins.
+
+http://<ec2-instance-public-ip>:8080/restart
+
+<img width="1487" height="812" alt="image" src="https://github.com/user-attachments/assets/08ff6e55-ec2f-45e2-91ef-0fe97b1d5b2a" />
+
+step 9 , will be Install the Docker Pipeline plugin in Jenkins:
+
+1. amnage jeenkin
+<img width="1915" height="853" alt="image" src="https://github.com/user-attachments/assets/5a1e3074-edf5-48ce-8f8b-0a5552bff260" />
+
+ 2. for old version u see plugin  only 
+<img width="1415" height="422" alt="image" src="https://github.com/user-attachments/assets/f80d5540-75a3-4707-a1b8-f50de4b77fd5" />
+
+3. three plguins are isntalled 
+<img width="1232" height="675" alt="image" src="https://github.com/user-attachments/assets/cc8953e3-8d68-48fc-a467-8f131ad2e630" />
+
+4. cchekboc restrt and have to restrt jenkisn again, its required otherwsie changes will not be refelcted 
+
+step 10 - we wil  now crwate our first pipline
+
+<img width="1152" height="852" alt="image" src="https://github.com/user-attachments/assets/f3fbb434-995b-45f2-96a8-2ec69a96f418" />
+in this pipiline option u can wrtie ur peiple in code here 
+
+<img width="1271" height="711" alt="image" src="https://github.com/user-attachments/assets/b26593d6-3712-47cf-8bf3-df4a1b42a608" />
+
+<img width="1387" height="811" alt="image" src="https://github.com/user-attachments/assets/adda26bf-8328-4eb4-81c5-cb4babbf87a5" />
+
+A simple jenkins pipeline to verify if the docker slave configuration is working as expected.
+
+pipeline {
+  agent {
+    docker { image 'node:16-alpine' }
+  }
+  stages {
+    stage('Test') {
+      steps {
+        sh 'node --version'
+      }
+    }
+  }
+}
 
 
 
