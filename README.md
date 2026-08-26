@@ -55,47 +55,119 @@ ssh -i <key.pem> ubuntu@<EC2-PUBLIC-IP>
 
 ```
 
-## 2️⃣ Install Java ☕
+## 2️⃣ Update the System
+Before installing Jenkins, Docker, and other required tools, update the packages on the EC2 instance.
+
+### Update Package List
+
+```bash
+sudo apt update
+```
+
+This command refreshes the local package information and checks for the latest available versions of packages.
+
+### Upgrade Installed Packages
+
+```bash
+sudo apt upgrade -y
+```
+This command upgrades the currently installed packages to their latest available versions.
+
+## 3️⃣ Install Java ☕
 
 Jenkins is a Java-based application, so Java needs to be installed before installing Jenkins.
 
+Install Java:
+
+```bash
+sudo apt install fontconfig openjdk-21-jre -y
+```
+### Verify Java Installation
+
+```bash
+java -version
+```
+This confirms that Java has been installed successfully and displays the installed Java version.
 Update Packages
 
-First, update the Ubuntu package repository to get the latest package information.
-
-```text
-sudo apt update
-
-```
-
-Install Java 17
-
-Install OpenJDK 17, which is required to run Jenkins.
-```text
-sudo apt install openjdk-21-jre
-```
-## Verify Java Installation
-
-Check whether Java has been installed successfully.
-```text
-java -version
-
-```
 <img width="912" height="105" alt="image" src="https://github.com/user-attachments/assets/f249455d-38f5-4def-a489-29805508ba5d" />
 
 Now, you can proceed with installing Jenkins
 
+## 4️⃣ Install Jenkins 🔧
+
+Add the Jenkins repository key:
+
+```bash
+sudo wget -O /etc/apt/keyrings/jenkins-keyring.asc \
+https://pkg.jenkins.io/debian-stable/jenkins.io-2026.key
+```
+This downloads the Jenkins repository signing key so that Ubuntu can securely verify packages coming from the Jenkins repository.
+
+### Add Jenkins Repository
+
+```bash
+echo "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc]" \
+https://pkg.jenkins.io/debian-stable binary/ | \
+sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+```
+This adds the Jenkins LTS repository to the EC2 instance.
+
+### Update Package Information
+
+```bash
+sudo apt update
+```
+
+<img width="1062" height="512" alt="image" src="https://github.com/user-attachments/assets/f09e8357-8fbb-4b15-824f-a06d2f83568c" />
+
+This refreshes the package list after adding the Jenkins repository.
+
+### Install Jenkins
+
+```bash
+sudo apt install jenkins -y
+```
+
+This installs Jenkins on the EC2 instance.
+
+## 5️⃣ Start & Enable Jenkins
+
+Start the Jenkins service:
+
+```bash
+sudo systemctl start jenkins
+```
+
+This starts Jenkins immediately.
+
+### Enable Jenkins at Boot
+
+```bash
+sudo systemctl enable jenkins
+```
+
+This ensures Jenkins automatically starts whenever the EC2 instance is restarted.
+
+### Check Jenkins Status
+
+```bash
+sudo systemctl status jenkins
+```
+
+This verifies whether the Jenkins service is running correctly.
+
+The status should show:
+
 ```text
-curl -fsSL https://pkg.jenkins.io/debian/jenkins.io-2023.key | sudo tee \
-  /usr/share/keyrings/jenkins-keyring.asc > /dev/null
-echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
-  https://pkg.jenkins.io/debian binary/ | sudo tee \
-  /etc/apt/sources.list.d/jenkins.list > /dev/null
-sudo apt-get update
-sudo apt-get install jenkins
+active (running)
 ```
 
 ## Check Jenkins Port 🔌
+
+```text
+sudo ss -tulpn | grep 8080
+```
 <img width="1095" height="102" alt="image" src="https://github.com/user-attachments/assets/0f9c4fd8-8ba4-4d07-95dc-a11e6943abc1" />
 
 By default, Jenkins runs on port 8080.
@@ -114,11 +186,9 @@ Jenkins uses port 8080 by default for its web interface. Therefore, browser requ
 
 💡 Why is this required?
 
-AWS Security Groups act as a virtual firewall for EC2 instances.
+AWS Security Groups act as a virtual firewall for EC2 instances. Allowing port 8080 enables traffic from the browser to reach the Jenkins service running on the EC2 instance.
 
-Allowing port 8080 enables traffic from the browser to reach the Jenkins service running on the EC2 instance.
-
-## 7️⃣ Access Jenkins 🌐
+## 6️⃣ Access Jenkins 🌐
 
 After allowing port 8080 in the Security Group, open Jenkins in a web browser.
 
@@ -131,8 +201,7 @@ http://<EC2-PUBLIC-IP>:8080
 
 <img width="1462" height="897" alt="image" src="https://github.com/user-attachments/assets/5412e7a6-e73e-4d5f-9278-37fa90825ead" />
 
-## 8️⃣ Get Initial Jenkins Admin Password 🔐
-
+### Get Initial Jenkins Admin Password 
 When Jenkins is installed for the first time, it generates an initial administrator password.
 
 Retrieve the password using:
@@ -151,7 +220,7 @@ Jenkins uses this temporary password to securely unlock the Jenkins dashboard du
 
 <img width="1276" height="830" alt="image" src="https://github.com/user-attachments/assets/07393301-5223-40a6-ba67-2ff4a1927c64" />
 
-## 9️⃣ Complete Jenkins Setup ⚙️
+### Complete Jenkins Setup
 
 Click on Install suggested plugins. Jenkins will install the commonly used plugins required for a basic Jenkins setup.
 
@@ -159,7 +228,7 @@ Click on Install suggested plugins. Jenkins will install the commonly used plugi
 
 Wait for the Jenkins to Install suggested plugins
 
-## Create Admin User
+### Create Admin User
 
 Create the first Jenkins administrator account by providing:
 
@@ -186,65 +255,156 @@ Jenkins Installation is Successful. You can now starting using the Jenkins
 <img width="1827" height="796" alt="image" src="https://github.com/user-attachments/assets/22579eb5-ea82-4c03-9ba1-42227f6f5f31" />
 
 
-## Install the Docker Pipeline plugin in Jenkins:
+## 7️⃣ Install Docker(Docker Slave Configuration) 🐳
 
-1. Install the Docker Pipeline plugin in Jenkins:
+Run the below command to Install Docker:
 
 ```text
+ sudo apt update
  sudo apt install docker.io -y
 ```
+This installs Docker on the same EC2 instance where Jenkins is running.
+
+### Verify Docker
+
+```bash
+docker --version
+```
+
+This confirms that Docker has been installed successfully.
 
 <img width="997" height="502" alt="image" src="https://github.com/user-attachments/assets/ed4b583b-cc12-4ab4-b2aa-17a94734b415" />
 
-Step 8 — Give Jenkins Permission to Use Docker
+## 8️⃣ Give Jenkins & Ubuntu Docker Permissions 🔐
 
-```text
- sudo su -
+Jenkins needs permission to execute Docker commands because the Jenkins pipeline will build Docker images and run Docker containers.
 
+Add Jenkins to the Docker group:
+
+```bash
+sudo usermod -aG docker jenkins
+```
+The `jenkins` user runs the Jenkins service, so this allows Jenkins to use Docker without requiring `sudo` for every Docker command.
+
+### Give Ubuntu User Docker Permission
+
+```bash
+sudo usermod -aG docker ubuntu
+```
+
+This allows the `ubuntu` user to run Docker commands without using `sudo`.
+
+For example:
+
+```bash
+docker ps
+```
+
+instead of:
+
+```bash
+sudo docker ps
+```
+### Restart Jenkins
+
+```bash
+sudo systemctl restart jenkins
+```
+
+This restarts Jenkins so that the updated Docker group permissions are applied to the Jenkins service.
+
+### Optional: Switch to Root and Run All Commands Together
+
+The same configuration can also be performed using:
+
+```bash
+sudo su -
+```
+
+Then:
+
+```bash
 usermod -aG docker jenkins
 usermod -aG docker ubuntu
-
 systemctl restart jenkins
-root@ip-172-31-86-175:~#
 ```
 
 <img width="646" height="165" alt="image" src="https://github.com/user-attachments/assets/46aefdce-ab1e-4d49-8ffa-a0b78b209fc2" />
 
-Now jenkin user is able to create cintainer or run coantuner
+Now jenkin user is able to create or run container.
 
 <img width="933" height="528" alt="image" src="https://github.com/user-attachments/assets/55442fc0-08ee-49fd-b74d-8173d292c3d7" />
 
-sometime jenkins dont pickup ur changes  so uc can reatrt ur jenkins. there might be a chahce its a good praactcie 
+### 🔄 Restart Jenkins
 
-Once you are done with the above steps, it is better to restart Jenkins.
+Sometimes Jenkins may not immediately pick up configuration or plugin changes. 
+As a good practice, restart Jenkins once the setup is complete.
 
-http://<ec2-instance-public-ip>:8080/restart
+### Restart using the browser
+
+Open:
+
+```text
+http://<EC2-PUBLIC-IP>:8080/restart
+```
 
 <img width="1487" height="812" alt="image" src="https://github.com/user-attachments/assets/08ff6e55-ec2f-45e2-91ef-0fe97b1d5b2a" />
 
-step 9 , will be Install the Docker Pipeline plugin in Jenkins:
+## 9️⃣ Install Docker Pipeline Plugin 🔌
 
-1. amnage jeenkin
+1. Log in to Jenkins.
+2. Go to Manage Jenkins > Manage Plugins.
+3. In the Available tab, search for "Docker Pipeline".
+4. Select the plugin and click the Install button.
+5. Restart Jenkins after the plugin is installed.
+
 <img width="1915" height="853" alt="image" src="https://github.com/user-attachments/assets/5a1e3074-edf5-48ce-8f8b-0a5552bff260" />
 
- 2. for old version u see plugin  only 
+NOTE: For old version you will see "plugin" only 
 <img width="1415" height="422" alt="image" src="https://github.com/user-attachments/assets/f80d5540-75a3-4707-a1b8-f50de4b77fd5" />
 
-3. three plguins are isntalled 
+Three plugins are installed: 
 <img width="1232" height="675" alt="image" src="https://github.com/user-attachments/assets/cc8953e3-8d68-48fc-a467-8f131ad2e630" />
 
-4. cchekboc restrt and have to restrt jenkisn again, its required otherwsie changes will not be refelcted 
+After installation, restart Jenkins if required, otherwise changes will not be reflected. 
 
-step 10 - we wil  now crwate our first pipline
+### Why Do We Need This Plugin?
+
+When a Jenkins Pipeline specifies a Docker environment or Docker-related configuration in the `Jenkinsfile`, Jenkins needs the Docker Pipeline plugin to process that configuration.
+
+The flow will be:
+
+```text
+Jenkins
+   │
+   ▼
+Jenkinsfile
+   │
+   ▼
+Docker Pipeline Plugin
+   │
+   ▼
+Docker
+   │
+   ▼
+Docker Agent / Container
+```
+
+### 🔟 Now we will create our first pipeline: 
+
 
 <img width="1152" height="852" alt="image" src="https://github.com/user-attachments/assets/f3fbb434-995b-45f2-96a8-2ec69a96f418" />
-in this pipiline option u can wrtie ur peiple in code here 
+In this "pipiline" option you can write your pipeline in code.
 
 <img width="1271" height="711" alt="image" src="https://github.com/user-attachments/assets/b26593d6-3712-47cf-8bf3-df4a1b42a608" />
 
+
 <img width="1387" height="811" alt="image" src="https://github.com/user-attachments/assets/adda26bf-8328-4eb4-81c5-cb4babbf87a5" />
 
+
 A simple jenkins pipeline to verify if the docker slave configuration is working as expected.
+
+```text
 
 pipeline {
   agent {
@@ -258,6 +418,7 @@ pipeline {
     }
   }
 }
+```
 
 
 
