@@ -277,7 +277,10 @@ This confirms that Docker has been installed successfully.
 
 ## 8️⃣ Give Jenkins & Ubuntu Docker Permissions 🔐
 
-Jenkins needs permission to execute Docker commands because the Jenkins pipeline will build Docker images and run Docker containers.
+Jenkins needs permission to execute Docker commands because the Jenkins pipeline will build Docker images and run Docker containers. Jenkins is automating the process of using Docker.
+This means:
+
+  "Allow the Jenkins user to use Docker. So here we are adding jenkins user to the docker group"
 
 Add Jenkins to the Docker group:
 
