@@ -393,19 +393,32 @@ Docker
 Docker Agent / Container
 ```
 
-### 🔟 Now we will create our first pipeline: 
+## 🔟 Now we will create our first pipeline: Connect GitHub Repository with Jenkins
+Now we will connect our GitHub repository with Jenkins and configure Jenkins to execute the pipeline.
 
+In this step, we will create our own Jenkins pipeline, store the Jenkinsfile inside the myfirstpipeline folder, and then connect this GitHub repository with Jenkins.
 
-<img width="1152" height="852" alt="image" src="https://github.com/user-attachments/assets/f3fbb434-995b-45f2-96a8-2ec69a96f418" />
-In this "pipiline" option you can write your pipeline in code.
+### 10.1 Create the Jenkinsfile
 
-<img width="1271" height="711" alt="image" src="https://github.com/user-attachments/assets/b26593d6-3712-47cf-8bf3-df4a1b42a608" />
+Create a folder named:
 
+myfirstpipeline
 
-<img width="1387" height="811" alt="image" src="https://github.com/user-attachments/assets/adda26bf-8328-4eb4-81c5-cb4babbf87a5" />
+Inside this folder, create a file named:
 
+Jenkinsfile
 
+The project structure should look like:
+
+```
+my-repository/
+└── myfirstpipeline/
+    └── Jenkinsfile
+```
+
+Add the following pipeline code inside the Jenkinsfile:
 A simple jenkins pipeline to verify if the docker slave configuration is working as expected. Main purpose is to test whether Jenkins can successfully create and use a Docker container as its agent.
+
 
 ```text
 
@@ -423,6 +436,112 @@ pipeline {
 }
 ```
 
+This pipeline uses a Docker container as the Jenkins agent and runs the node --version command inside the container. 
+
+### 10.2 Create a Pipeline Job in Jenkins
+
+Open the Jenkins Dashboard.
+Click New Item.
+Enter a name for the job, for example:
+
+  my-first-pipeline
+  Select Pipeline.
+
+Click OK.
+
+### 10.3 Configure GitHub Repository
+
+<img width="1152" height="852" alt="image" src="https://github.com/user-attachments/assets/f3fbb434-995b-45f2-96a8-2ec69a96f418" />
+
+In this "pipeline" option you can write your pipeline in code.
+
+<img width="1271" height="711" alt="image" src="https://github.com/user-attachments/assets/b26593d6-3712-47cf-8bf3-df4a1b42a608" />
+
+...
+
+In the Jenkins job configuration, scroll down to the Pipeline section.
+
+Select:
+
+Definition → Pipeline script from SCM
+
+Select Git as the SCM.
+
+Enter your GitHub repository URL:
+
+https://github.com/<your-username>/<your-repository>.git
+
+For example:
+
+https://github.com/your-username/jenkins-docker-agent.git
+
+Specify the branch:
+
+*/main
+
+Set the Script Path to:
+
+my_first_pipeline/Jenkinsfile
+
+Click Save.
+
+<img width="1387" height="811" alt="image" src="https://github.com/user-attachments/assets/adda26bf-8328-4eb4-81c5-cb4babbf87a5" />
+
+### 10.4 Execute the Pipeline
+
+Click Build Now.
+
+Jenkins will:
+
+When the pipeline starts, Jenkins follows these steps:
+
+1. **Clone the repository** – Jenkins gets the code from the GitHub repository.
+
+2. **Read the Jenkinsfile** – Jenkins finds `myfirstpipeline/Jenkinsfile` and reads the pipeline configuration.
+
+3. **Request a Docker agent** – Jenkins asks Docker to create a container to run the pipeline.
+
+4. **Pull the Docker image if required** – Docker checks whether the `node:16-alpine` image is available. If it is not available, Docker pulls it from Docker Hub.
+
+5. **Create the container** – Docker creates a temporary container using the `node:16-alpine` image.
+
+6. **Execute the pipeline** – Jenkins runs the pipeline inside this container. In our simple pipeline, the `Test` stage executes:
+
+node --version
+
+7. **Clean up the container** – After the pipeline finishes, Jenkins cleans up the temporary container. The Docker image remains available for future builds.
+
+> **NOTE:** After the pipeline execution is completed, Jenkins removes the temporary Docker container because the container is only required as an execution environment for the pipeline. The Docker image (`node:16-alpine`) is not deleted and can be reused for future pipeline runs.
+
+
+## Advantages of Using Docker as a Jenkins Agent
+
+In a traditional VM-based approach, different Jenkins workers may have different OS versions, packages, dependencies, and runtime versions.
+
+For example:
+
+```text
+VM 1 → Node.js 13
+VM 2 → Node.js 14
+VM 3 → Node.js 14
+```
+
+Now suppose we want to upgrade the environment to Node.js 16.
+
+Without Docker, we would need to manually log in to each VM and update Node.js and its dependencies. This can take time and may cause configuration differences between machines.
+
+With Docker, we can simply define the required Node.js version in the Jenkinsfile:
+
+```text
+
+agent {
+    docker {
+        image 'node:16-alpine'
+    }
+}
+```
+
+**Key Idea** : Instead of updating Node.js manually on every VM, we define the required version in the Docker image and Jenkins uses that container to run the pipeline.
 
 
 
