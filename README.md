@@ -405,7 +405,7 @@ In this "pipiline" option you can write your pipeline in code.
 <img width="1387" height="811" alt="image" src="https://github.com/user-attachments/assets/adda26bf-8328-4eb4-81c5-cb4babbf87a5" />
 
 
-A simple jenkins pipeline to verify if the docker slave configuration is working as expected.
+A simple jenkins pipeline to verify if the docker slave configuration is working as expected. Main purpose is to test whether Jenkins can successfully create and use a Docker container as its agent.
 
 ```text
 
