@@ -440,14 +440,12 @@ This pipeline uses a Docker container as the Jenkins agent and runs the node --v
 
 ### 10.2 Create a Pipeline Job in Jenkins
 
-Open the Jenkins Dashboard.
-Click New Item.
-Enter a name for the job, for example:
-
-  my-first-pipeline
-  Select Pipeline.
-
-Click OK.
+1. Open the Jenkins Dashboard.
+2. Click New Item.
+3. Enter a name for the job, for example:
+    my-first-pipeline
+4. Select Pipeline.
+5. Click OK.
 
 ### 10.3 Configure GitHub Repository
 
